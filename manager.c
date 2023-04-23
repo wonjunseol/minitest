@@ -40,8 +40,12 @@ void saveData(Product p[], int count){
 
 	//중량 가격 제품명
 	fp= fopen("product.txt","wt");
-	
-	
+	for(int i=0; i<count; i++) {
+		if(p[i].price == -1) {
+			continue;
+		}
+		fprintf(fp,"%-15s  %3dg %4d원\n", p[i].name, p[i].weight, p[i].price); 
+	}	
 	fclose(fp);
 	printf("저장됨!\n");
 }
@@ -51,12 +55,21 @@ void saveData(Product p[], int count){
 int loadData(Product *p){
 	int count=0;
 	FILE*fp;
-
+	fp = fopen("product.txt", "rt");
 	//파일 내용을 읽어와서 배열에 값 추가하기
-
-
-
-
+	if (fp == NULL) {
+        	printf("=> 파일 없음\n");
+        	return 0;
+    	}
+        fscanf(fp, "%s", p->name); 
+        if(feof(fp)) {
+		return count;
+	}	
+        fscanf(fp, "%dg", &p->weight);
+        fscanf(fp, "%d원", &p->price);	  
+	
+	fclose(fp);
 	printf("=> 로딩 성공!\n");
+	count++;
 	return count;
 }
